@@ -1,14 +1,211 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:paddingBottom="@dimen/activity_vertical_margin"
-	android:paddingLeft="@dimen/activity_horizontal_margin"
-	android:paddingRight="@dimen/activity_horizontal_margin"
-	android:paddingTop="@dimen/activity_vertical_margin"
-	tools:context="es.carlosrolindez.lallanyta.MainActivity" >
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/hello_world" />
-</RelativeLayout>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="2"
+    android:columnWidth="320dp"
+    android:orientation="horizontal"
+    android:rowCount="2"
+    android:stretchMode="columnWidth" >
+
+    <GridLayout 
+	    android:id="@+id/topleft"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:columnCount="2"
+	    android:columnWidth="160dp"
+	    android:orientation="vertical"
+	    android:rowCount="2"
+	    android:stretchMode="columnWidth" >
+	    <LinearLayout
+	        android:id="@+id/topleft1"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp"
+	        android:orientation="horizontal"
+	        android:layout_row="0" >
+	        <ImageView
+	            android:id="@+id/imagetopleft1"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/pilar1" />
+	    </LinearLayout>	    
+	    <LinearLayout
+	        android:id="@+id/topleft2"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">	
+	        <ImageView
+	            android:id="@+id/imagetopleft2"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/pilar2" />
+	    </LinearLayout>	    
+	    <LinearLayout
+	        android:id="@+id/topleft3"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagetopleft3"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/pilar3" />
+	    </LinearLayout>	    
+	    <LinearLayout
+	        android:id="@+id/topleft4"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">	
+	    </LinearLayout>	  
+    	    
+	</GridLayout> 
+
+    <GridLayout 
+	    android:id="@+id/topright"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:columnCount="2"
+	    android:columnWidth="160dp"
+	    android:orientation="vertical"
+	    android:rowCount="2"
+	    android:stretchMode="columnWidth" >  	
+	    <LinearLayout
+	        android:id="@+id/topright1"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagetopright1"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/lucia1" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:id="@+id/topright2"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagetopright2"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/lucia2" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:id="@+id/topright3"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagetopright3"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/lucia3" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:id="@+id/topright4"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	    </LinearLayout>
+	</GridLayout> 
+	
+    <GridLayout 
+	    android:id="@+id/bottomleft"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:columnCount="2"
+	    android:columnWidth="160dp"
+	    android:orientation="vertical"
+	    android:rowCount="2"
+	    android:stretchMode="columnWidth" >  	   		    	    
+	    <LinearLayout
+	        android:id="@+id/bottomleft1"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagebottomleft1"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/julia1" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:id="@+id/bottomleft2"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagebottomleft2"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/julia2" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:id="@+id/bottomleft3"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagebottomleft3"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/julia3" />
+	    </LinearLayout>
+	    <LinearLayout
+	        android:id="@+id/bottomleft4"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	    </LinearLayout>	    	    
+	</GridLayout> 
+
+    <GridLayout 
+	    android:id="@+id/bottomright"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:columnCount="2"
+	    android:columnWidth="160dp"
+	    android:orientation="vertical"
+	    android:rowCount="2"
+	    android:stretchMode="columnWidth" >  	   		    	    
+ 	    <LinearLayout
+	        android:id="@+id/bottomright1"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagebottomright1"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/chus1" />
+	    </LinearLayout>
+ 	    <LinearLayout
+	        android:id="@+id/bottomright2"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagebottomright2"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/chus2" />
+	    </LinearLayout>
+ 	    <LinearLayout
+	        android:id="@+id/bottomright3"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	        <ImageView
+	            android:id="@+id/imagebottomright3"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/chus3" />
+	    </LinearLayout>
+ 	    <LinearLayout
+	        android:id="@+id/bottomright4"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp" 
+	        android:orientation="horizontal">		
+	    </LinearLayout>	    	    	    	   
+	</GridLayout> 
+</GridLayout> 
