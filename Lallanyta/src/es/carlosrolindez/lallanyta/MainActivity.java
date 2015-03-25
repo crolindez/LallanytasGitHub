@@ -21,10 +21,8 @@ import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 	
-	GridContainer[] gridSet = new GridContainer[4];
+	PictureCollection pictureCollection = new PictureCollection();
 	
-	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,95 +48,130 @@ public class MainActivity extends Activity {
 	    findViewById(R.id.imagebottomright4).setOnTouchListener(new MyTouchListener());
 	    
 	    
-	    gridSet[0] = new GridContainer(R.id.imagetopleft1,R.id.imagetopleft2,R.id.imagetopleft3,R.id.imagetopleft4);
-	    gridSet[1] = new GridContainer(R.id.imagetopright1,R.id.imagetopright2,R.id.imagetopright3,R.id.imagetopright4);
-	    gridSet[2] = new GridContainer(R.id.imagebottomleft1,R.id.imagebottomleft2,R.id.imagebottomleft3,R.id.imagebottomleft4);
-	    gridSet[3] = new GridContainer(R.id.imagebottomright1,R.id.imagebottomright2,R.id.imagebottomright3,R.id.imagebottomright4);
 
-	    findViewById(R.id.topleft).setOnDragListener(new MyDragListener(getResources().getDrawable(R.drawable.purple_bg) ,
-	    		getResources().getDrawable(R.drawable.purple_selected_bg),"purple",gridSet[0]));
-	    findViewById(R.id.topright).setOnDragListener(new MyDragListener(getResources().getDrawable(R.drawable.blue_bg) ,
-	    		getResources().getDrawable(R.drawable.blue_selected_bg),"blue",gridSet[1]));
-	    findViewById(R.id.bottomleft).setOnDragListener(new MyDragListener(getResources().getDrawable(R.drawable.green_bg) ,
-	    		getResources().getDrawable(R.drawable.green_selected_bg),"green",gridSet[2]));
-	    findViewById(R.id.bottomright).setOnDragListener(new MyDragListener(getResources().getDrawable(R.drawable.orange_bg) ,
-	    		getResources().getDrawable(R.drawable.orange_selected_bg),"orange",gridSet[3]));
+	    findViewById(R.id.topleft).setOnDragListener(new GridDragListener(getResources().getDrawable(R.drawable.purple_bg) ,
+	    		getResources().getDrawable(R.drawable.purple_selected_bg),"purple"));
+	    findViewById(R.id.topright).setOnDragListener(new GridDragListener(getResources().getDrawable(R.drawable.blue_bg) ,
+	    		getResources().getDrawable(R.drawable.blue_selected_bg),"blue"));
+	    findViewById(R.id.bottomleft).setOnDragListener(new GridDragListener(getResources().getDrawable(R.drawable.green_bg) ,
+	    		getResources().getDrawable(R.drawable.green_selected_bg),"green"));
+	    findViewById(R.id.bottomright).setOnDragListener(new GridDragListener(getResources().getDrawable(R.drawable.orange_bg) ,
+	    		getResources().getDrawable(R.drawable.orange_selected_bg),"orange"));
+
+	    findViewById(R.id.imagetopleft1).setOnDragListener(new ImageDragListener(R.id.imagetopleft1));
+	    findViewById(R.id.imagetopleft2).setOnDragListener(new ImageDragListener(R.id.imagetopleft2));
+	    findViewById(R.id.imagetopleft3).setOnDragListener(new ImageDragListener(R.id.imagetopleft3));
+	    findViewById(R.id.imagetopleft4).setOnDragListener(new ImageDragListener(R.id.imagetopleft4));
+
+	    findViewById(R.id.imagetopright1).setOnDragListener(new ImageDragListener(R.id.imagetopright1));
+	    findViewById(R.id.imagetopright2).setOnDragListener(new ImageDragListener(R.id.imagetopright2));
+	    findViewById(R.id.imagetopright3).setOnDragListener(new ImageDragListener(R.id.imagetopright3));
+	    findViewById(R.id.imagetopright4).setOnDragListener(new ImageDragListener(R.id.imagetopright4));
 	    
-	    List<Integer> list = Arrays.asList(
-	    		(Integer)R.drawable.julia1,(Integer)R.drawable.julia2,(Integer)R.drawable.julia3,
-	    		(Integer)R.drawable.pilar1,(Integer)R.drawable.pilar2,(Integer)R.drawable.pilar3,
-	    		(Integer)R.drawable.lucia1,(Integer)R.drawable.lucia2,(Integer)R.drawable.lucia3,
-	    		(Integer)R.drawable.chus1,(Integer)R.drawable.chus2,(Integer)R.drawable.chus3);
-	    		
-	    		
-	    Collections.shuffle(list);
+	    findViewById(R.id.imagebottomleft1).setOnDragListener(new ImageDragListener(R.id.imagebottomleft1));
+	    findViewById(R.id.imagebottomleft2).setOnDragListener(new ImageDragListener(R.id.imagebottomleft2));
+	    findViewById(R.id.imagebottomleft3).setOnDragListener(new ImageDragListener(R.id.imagebottomleft3));
+	    findViewById(R.id.imagebottomleft4).setOnDragListener(new ImageDragListener(R.id.imagebottomleft4));
 
-	    int imageCont = 0;
-	    for (int i = 0; i < 4; i++) {
-	    	gridSet[i].addPicture(getResources().getDrawable(list.get(imageCont++)));
-	    	gridSet[i].addPicture(getResources().getDrawable(list.get(imageCont++)));	    	
-	    	gridSet[i].addPicture(getResources().getDrawable(list.get(imageCont++)));
-	    }
-
-	}
-
-	public class GridContainer {
-		
-		int numPictures;
-		int[] picturesID = new int[4];
-		
-		
-		public GridContainer(int res0, int res1, int res2, int res3) {
-			numPictures = 0;
-			picturesID[0] = res0;
-			picturesID[1] = res1;
-			picturesID[2] = res2;
-			picturesID[3] = res3;
-			
-		}
-		
-		public int size() {
-			int size = 0;
-			for (int picture: picturesID) {
-				if (((ImageView) findViewById(picture)).getDrawable() != null)  size++;
-			}
-			
-			return size;
-		}
-		
-		public boolean addPicture(Drawable draw) {
-			for (int picture: picturesID) {
-				if (((ImageView) findViewById(picture)).getDrawable() == null)  {
-					((ImageView) findViewById(picture)).setImageDrawable(draw);
-					((ImageView) findViewById(picture)).invalidate();
-					return true;
-				}
-			}
-			return false;
-			
-		}
-		public boolean removePicture(int id) {
-			Log.e("removePicture",""+id);
-			for (int picture: picturesID) {
-				Log.e("picture",""+picture );
-				if (picture == id)  {
-					((ImageView) findViewById(picture)).setImageDrawable(null);
-					((ImageView) findViewById(picture)).invalidate();
-					return true;
-				}
-			}
-			return false;
-		}
+	    findViewById(R.id.imagebottomright1).setOnDragListener(new ImageDragListener(R.id.imagebottomright1));
+	    findViewById(R.id.imagebottomright2).setOnDragListener(new ImageDragListener(R.id.imagebottomright2));
+	    findViewById(R.id.imagebottomright3).setOnDragListener(new ImageDragListener(R.id.imagebottomright3));
+	    findViewById(R.id.imagebottomright4).setOnDragListener(new ImageDragListener(R.id.imagebottomright4));
+	    
+		pictureCollection.updateDrawing(); 
+	   
 	}
 	
-	private final class MyTouchListener implements OnTouchListener {
+	public class PictureCollection {
+		
+		List<Integer> imageViewId = Arrays.asList(
+			R.id.imagetopleft1, R.id.imagetopleft2, R.id.imagetopleft3, R.id.imagetopleft4,
+			R.id.imagetopright1, R.id.imagetopright2, R.id.imagetopright3, R.id.imagetopright4,
+			R.id.imagebottomleft1, R.id.imagebottomleft2, R.id.imagebottomleft3, R.id.imagebottomleft4,
+			R.id.imagebottomright1, R.id.imagebottomright2, R.id.imagebottomright3, R.id.imagebottomright4 ); 
+
+	    List<Integer> drawableId;
+		
+	    
+	    
+		public PictureCollection() {
+			drawableId = Arrays.asList(
+		    		(Integer)R.drawable.julia1,(Integer)R.drawable.julia2,(Integer)R.drawable.julia3,(Integer) 0,
+		    		(Integer)R.drawable.pilar1,(Integer)R.drawable.pilar2,(Integer)R.drawable.pilar3,(Integer) 0,
+		    		(Integer)R.drawable.lucia1,(Integer)R.drawable.lucia2,(Integer)R.drawable.lucia3,(Integer) 0,
+		    		(Integer)R.drawable.chus1, (Integer)R.drawable.chus2, (Integer)R.drawable.chus3, (Integer) 0);
+		    Collections.shuffle(drawableId);
+		}
+
+		public boolean changeDrawing(int image, int drawable) {
+			int pos = imageViewId.indexOf((Integer)image);
+			if ( pos < 0 ) return false;
+			if (drawable == 0) return false;
+			if (drawableId.get(pos) > 0) return false;
+			
+			drawableId.set(pos, drawable);	
+			((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawable));
+			((ImageView) findViewById(image)).invalidate();
+			return true;
+		
+		}
+		
+
+		public int hideDrawing(int image) {
+			int pos = imageViewId.indexOf((Integer)image);
+			if ( pos < 0 ) return 0;
+			if (drawableId.get(pos) == 0) return 0;
+			
+			((ImageView) findViewById(image)).setImageDrawable(null);
+			((ImageView) findViewById(image)).invalidate();
+			return drawableId.get(pos);
+		}
+		
+		public void showDrawing() {
+			for (Integer image :  imageViewId)
+			{
+				int pos = imageViewId.indexOf((Integer)image);
+				if ( (((ImageView) findViewById(image)).getDrawable() == null)  && (drawableId.get(pos)>0) )  {
+					((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawableId.get(pos)));
+					((ImageView) findViewById(image)).invalidate();
+				}
+			}
+		}
+		
+		public void confirmDrawing() {
+			for (Integer image :  imageViewId)
+			{
+				int pos = imageViewId.indexOf((Integer)image);
+				if (((ImageView) findViewById(image)).getDrawable() == null) 
+					drawableId.set(pos,0);
+			}
+		}
+		
+		public void updateDrawing() {
+			for (Integer image :  imageViewId)
+			{
+				int pos = imageViewId.indexOf((Integer)image);
+				if (drawableId.get(pos) > 0 )
+					((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawableId.get(pos)));
+				else
+					((ImageView) findViewById(image)).setImageDrawable(null);
+				((ImageView) findViewById(image)).invalidate();
+			}
+		}
+		
+			
+	}
+
+	
+	public final class MyTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-				ClipData data = ClipData.newPlainText("", "");
-				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-				view.startDrag(data, shadowBuilder, ((ImageView) view).getDrawable(), 0);
-	    		for (GridContainer item : gridSet ) item.removePicture(view.getId());
-//				view.setVisibility(View.INVISIBLE);
+				int drawableId = pictureCollection.hideDrawing(view.getId());
+				if (drawableId > 0) {
+					ClipData data = ClipData.newPlainText("", "");
+					DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+					view.startDrag(data, shadowBuilder, drawableId, 0);
+				}
 				return true;
 			} else {
 				return false;
@@ -146,17 +179,16 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	class MyDragListener implements OnDragListener {
+	class GridDragListener implements OnDragListener {
 	    Drawable enterShape = getResources().getDrawable(R.drawable.blue_selected_bg);
 	    Drawable normalShape = getResources().getDrawable(R.drawable.blue_bg);
 	    String TAG;
-	    GridContainer grid;
 
-	    public MyDragListener(Drawable normal, Drawable selected,String color, GridContainer gr) {
+	    public GridDragListener(Drawable normal, Drawable selected,String color) {
 	    	enterShape = selected;
 	    	normalShape = normal;
 	    	TAG = color;
-	    	grid = gr;
+
 	    }
 	    
 	    @Override
@@ -164,35 +196,62 @@ public class MainActivity extends Activity {
 //	    	int action = event.getAction();
 	    	switch (event.getAction()) {
 	    	case DragEvent.ACTION_DRAG_STARTED:
+	    		Log.e(TAG,"started");
 	    		// do nothing
-	    		Log.e("Drag " + TAG,"started");
 	    		break;
 	    	case DragEvent.ACTION_DRAG_ENTERED:
-	    		Log.e("Drag " + TAG,"entered");
+	    		Log.e(TAG,"entered");
 	    		v.setBackgroundDrawable(enterShape);
 	    		break;
 	    	case DragEvent.ACTION_DRAG_EXITED:
-	    		Log.e("Drag " + TAG,"exited");
+	    		Log.e(TAG,"exited");
 	    		v.setBackgroundDrawable(normalShape);
 	    		break;
 	    	case DragEvent.ACTION_DROP:
-				// Dropped, reassign View to ViewGroup
-	    		Log.e("Drag " + TAG,"drop");
-				Drawable draw = (Drawable) event.getLocalState();
-	    		grid.addPicture(draw);
-	/*			ViewGroup owner = (ViewGroup) view.getParent();
-				owner.removeView(view);
-				LinearLayout container = (LinearLayout) v;
-				container.addView(view);
-				view.setVisibility(View.VISIBLE);*/
+	    		Log.e(TAG,"drop");
+	    		v.setBackgroundDrawable(normalShape);
 				break;
 	    	case DragEvent.ACTION_DRAG_ENDED:
-	    		Log.e("Drag " + TAG,"ended");
+	    		Log.e(TAG,"ended");
 	    		v.setBackgroundDrawable(normalShape);
 	    	default:
 	    		break;
-  }
-  return true;
+	    	}
+	    	return true;
+	    }
+	}
+
+	class ImageDragListener implements OnDragListener {
+	    int localImageId;
+
+	    public ImageDragListener(int imageId) {
+	    	localImageId = imageId;
+
+	    }
+    
+	    @Override
+	    public boolean onDrag(View v, DragEvent event) {
+	    	switch (event.getAction()) {
+	    	case DragEvent.ACTION_DRAG_STARTED:
+	    		break;
+	    	case DragEvent.ACTION_DRAG_ENTERED:
+	    		break;
+	    	case DragEvent.ACTION_DRAG_EXITED:
+	    		break;
+	    	case DragEvent.ACTION_DROP:
+				// Dropped, reassign View to ViewGroup
+				Integer drawableId = (Integer) event.getLocalState();
+	    		if (pictureCollection.changeDrawing(localImageId, drawableId)) {
+	    			pictureCollection.confirmDrawing();
+	    		}
+				return false;
+	    	case DragEvent.ACTION_DRAG_ENDED:
+	    		pictureCollection.showDrawing();
+	    		return false;
+	    	default:	    		
+	    		break;
+	    	}
+	    	return true;
 	    }
 	}
 
