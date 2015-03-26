@@ -6,8 +6,10 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -22,10 +24,12 @@ import android.widget.ImageView;
 public class MainActivity extends Activity {
 	
 	PictureCollection pictureCollection = new PictureCollection();
+	Vibrator vib;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		setContentView(R.layout.activity_main);
 	    findViewById(R.id.imagetopleft1).setOnTouchListener(new MyTouchListener());
 	    findViewById(R.id.imagetopleft2).setOnTouchListener(new MyTouchListener());
@@ -91,8 +95,8 @@ public class MainActivity extends Activity {
 			R.id.imagebottomright1, R.id.imagebottomright2, R.id.imagebottomright3, R.id.imagebottomright4 ); 
 
 	    List<Integer> drawableId;
+	    List<Integer> patternId;
 		
-	    
 	    
 		public PictureCollection() {
 			drawableId = Arrays.asList(
@@ -100,7 +104,26 @@ public class MainActivity extends Activity {
 		    		(Integer)R.drawable.pilar1,(Integer)R.drawable.pilar2,(Integer)R.drawable.pilar3,(Integer) 0,
 		    		(Integer)R.drawable.lucia1,(Integer)R.drawable.lucia2,(Integer)R.drawable.lucia3,(Integer) 0,
 		    		(Integer)R.drawable.chus1, (Integer)R.drawable.chus2, (Integer)R.drawable.chus3, (Integer) 0);
-		    Collections.shuffle(drawableId);
+			patternId = Arrays.asList(
+		    		(Integer)R.drawable.pilar1,(Integer)R.drawable.pilar2,(Integer)R.drawable.pilar3,
+		    		(Integer)R.drawable.lucia1,(Integer)R.drawable.lucia2,(Integer)R.drawable.lucia3,
+		    		(Integer)R.drawable.julia1,(Integer)R.drawable.julia2,(Integer)R.drawable.julia3,
+		    		(Integer)R.drawable.chus1, (Integer)R.drawable.chus2, (Integer)R.drawable.chus3);
+//		    Collections.shuffle(drawableId);
+		}
+		
+		public void updateDrawing() {
+			for (Integer image :  imageViewId)
+			{
+				int pos = imageViewId.indexOf((Integer)image);
+				if (drawableId.get(pos) > 0 ) {
+					((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawableId.get(pos)));
+				}
+				else
+					((ImageView) findViewById(image)).setImageDrawable(null);
+				((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
+				((ImageView) findViewById(image)).invalidate();
+			}
 		}
 
 		public boolean changeDrawing(int image, int drawable) {
@@ -111,7 +134,19 @@ public class MainActivity extends Activity {
 			
 			drawableId.set(pos, drawable);	
 			((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawable));
+			((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
 			((ImageView) findViewById(image)).invalidate();
+			
+			for (Integer imageSet :  imageViewId)
+			{
+				pos = imageViewId.indexOf((Integer)imageSet);
+				if (((ImageView) findViewById(imageSet)).getVisibility() == View.INVISIBLE) {
+					((ImageView) findViewById(imageSet)).setImageDrawable(null);
+					((ImageView) findViewById(imageSet)).setVisibility(View.VISIBLE);
+					drawableId.set(pos,0);					
+				}
+			}
+	
 			return true;
 		
 		}
@@ -122,8 +157,8 @@ public class MainActivity extends Activity {
 			if ( pos < 0 ) return 0;
 			if (drawableId.get(pos) == 0) return 0;
 			
-			((ImageView) findViewById(image)).setImageDrawable(null);
-			((ImageView) findViewById(image)).invalidate();
+			((ImageView) findViewById(image)).setVisibility(View.INVISIBLE);
+			//((ImageView) findViewById(image)).invalidate();
 			return drawableId.get(pos);
 		}
 		
@@ -131,32 +166,26 @@ public class MainActivity extends Activity {
 			for (Integer image :  imageViewId)
 			{
 				int pos = imageViewId.indexOf((Integer)image);
-				if ( (((ImageView) findViewById(image)).getDrawable() == null)  && (drawableId.get(pos)>0) )  {
-					((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawableId.get(pos)));
-					((ImageView) findViewById(image)).invalidate();
+				if ( (((ImageView) findViewById(image)).getVisibility() == View.INVISIBLE) )  {
+					((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
+					//((ImageView) findViewById(image)).invalidate();
 				}
 			}
 		}
 		
-		public void confirmDrawing() {
-			for (Integer image :  imageViewId)
+		public boolean checkPattern() {
+			for (int grid = 0; grid<4 ; grid++) 
 			{
-				int pos = imageViewId.indexOf((Integer)image);
-				if (((ImageView) findViewById(image)).getDrawable() == null) 
-					drawableId.set(pos,0);
+				for (int imageGrid = 0;  imageGrid<4; imageGrid++)
+				{
+					Integer pattern = drawableId.get(imageGrid + grid*4);
+					int pos = patternId.indexOf(pattern);
+					if (pos < 0) continue;
+					if (pos >= (grid+1)*3) return false;
+					if (pos < (grid*3)) return false;
+				}
 			}
-		}
-		
-		public void updateDrawing() {
-			for (Integer image :  imageViewId)
-			{
-				int pos = imageViewId.indexOf((Integer)image);
-				if (drawableId.get(pos) > 0 )
-					((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawableId.get(pos)));
-				else
-					((ImageView) findViewById(image)).setImageDrawable(null);
-				((ImageView) findViewById(image)).invalidate();
-			}
+			return true;			
 		}
 		
 			
@@ -196,23 +225,19 @@ public class MainActivity extends Activity {
 //	    	int action = event.getAction();
 	    	switch (event.getAction()) {
 	    	case DragEvent.ACTION_DRAG_STARTED:
-	    		Log.e(TAG,"started");
 	    		// do nothing
 	    		break;
 	    	case DragEvent.ACTION_DRAG_ENTERED:
-	    		Log.e(TAG,"entered");
 	    		v.setBackgroundDrawable(enterShape);
 	    		break;
 	    	case DragEvent.ACTION_DRAG_EXITED:
-	    		Log.e(TAG,"exited");
+	    		vib.vibrate(200);
 	    		v.setBackgroundDrawable(normalShape);
 	    		break;
 	    	case DragEvent.ACTION_DROP:
-	    		Log.e(TAG,"drop");
 	    		v.setBackgroundDrawable(normalShape);
 				break;
 	    	case DragEvent.ACTION_DRAG_ENDED:
-	    		Log.e(TAG,"ended");
 	    		v.setBackgroundDrawable(normalShape);
 	    	default:
 	    		break;
@@ -239,15 +264,18 @@ public class MainActivity extends Activity {
 	    	case DragEvent.ACTION_DRAG_EXITED:
 	    		break;
 	    	case DragEvent.ACTION_DROP:
+    			Log.e("drag","drop");
 				// Dropped, reassign View to ViewGroup
 				Integer drawableId = (Integer) event.getLocalState();
 	    		if (pictureCollection.changeDrawing(localImageId, drawableId)) {
-	    			pictureCollection.confirmDrawing();
+	    			Log.e("drop","checking");
+	    			if (pictureCollection.checkPattern())
+	    				vib.vibrate(1000);
 	    		}
 				return false;
 	    	case DragEvent.ACTION_DRAG_ENDED:
+    			Log.e("drag","ended");
 	    		pictureCollection.showDrawing();
-	    		return false;
 	    	default:	    		
 	    		break;
 	    	}
