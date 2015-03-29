@@ -8,9 +8,10 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,33 +24,37 @@ import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 	
-	PictureCollection pictureCollection = new PictureCollection();
-	Vibrator vib;
+	public PictureCollection pictureCollection = new PictureCollection();
+	public static Vibrator vib;
+	public static final SoundPool sp = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
+	public static int okSound;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		okSound    = sp.load(this, R.raw.tata,  1); 
+		
 		setContentView(R.layout.activity_main);
-	    findViewById(R.id.imagetopleft1).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagetopleft2).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagetopleft3).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagetopleft4).setOnTouchListener(new MyTouchListener());
+	    findViewById(R.id.imagetopleft1).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagetopleft2).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagetopleft3).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagetopleft4).setOnTouchListener(new ImageTouchListener());
 
-	    findViewById(R.id.imagetopright1).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagetopright2).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagetopright3).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagetopright4).setOnTouchListener(new MyTouchListener());
+	    findViewById(R.id.imagetopright1).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagetopright2).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagetopright3).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagetopright4).setOnTouchListener(new ImageTouchListener());
 	    
-	    findViewById(R.id.imagebottomleft1).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagebottomleft2).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagebottomleft3).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagebottomleft4).setOnTouchListener(new MyTouchListener());
+	    findViewById(R.id.imagebottomleft1).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagebottomleft2).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagebottomleft3).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagebottomleft4).setOnTouchListener(new ImageTouchListener());
 
-	    findViewById(R.id.imagebottomright1).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagebottomright2).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagebottomright3).setOnTouchListener(new MyTouchListener());
-	    findViewById(R.id.imagebottomright4).setOnTouchListener(new MyTouchListener());
+	    findViewById(R.id.imagebottomright1).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagebottomright2).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagebottomright3).setOnTouchListener(new ImageTouchListener());
+	    findViewById(R.id.imagebottomright4).setOnTouchListener(new ImageTouchListener());
 	    
 	    
 
@@ -88,14 +93,14 @@ public class MainActivity extends Activity {
 	
 	public class PictureCollection {
 		
-		List<Integer> imageViewId = Arrays.asList(
+		public final List<Integer> imageViewId = Arrays.asList(
 			R.id.imagetopleft1, R.id.imagetopleft2, R.id.imagetopleft3, R.id.imagetopleft4,
 			R.id.imagetopright1, R.id.imagetopright2, R.id.imagetopright3, R.id.imagetopright4,
 			R.id.imagebottomleft1, R.id.imagebottomleft2, R.id.imagebottomleft3, R.id.imagebottomleft4,
 			R.id.imagebottomright1, R.id.imagebottomright2, R.id.imagebottomright3, R.id.imagebottomright4 ); 
 
-	    List<Integer> drawableId;
-	    List<Integer> patternId;
+	    public List<Integer> drawableId;
+	    public List<Integer> patternId;
 		
 	    
 		public PictureCollection() {
@@ -109,7 +114,7 @@ public class MainActivity extends Activity {
 		    		(Integer)R.drawable.lucia1,(Integer)R.drawable.lucia2,(Integer)R.drawable.lucia3,
 		    		(Integer)R.drawable.julia1,(Integer)R.drawable.julia2,(Integer)R.drawable.julia3,
 		    		(Integer)R.drawable.chus1, (Integer)R.drawable.chus2, (Integer)R.drawable.chus3);
-//		    Collections.shuffle(drawableId);
+		    Collections.shuffle(drawableId);
 		}
 		
 		public void updateDrawing() {
@@ -118,11 +123,16 @@ public class MainActivity extends Activity {
 				int pos = imageViewId.indexOf((Integer)image);
 				if (drawableId.get(pos) > 0 ) {
 					((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawableId.get(pos)));
+//					((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
+					((ImageView) findViewById(image)).invalidate();
 				}
-				else
+				else {
 					((ImageView) findViewById(image)).setImageDrawable(null);
-				((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
-				((ImageView) findViewById(image)).invalidate();
+//					((ImageView) findViewById(image)).setVisibility(View.INVISIBLE);	
+					((ImageView) findViewById(image)).invalidate();
+				}
+
+
 			}
 		}
 
@@ -134,18 +144,22 @@ public class MainActivity extends Activity {
 			
 			drawableId.set(pos, drawable);	
 			((ImageView) findViewById(image)).setImageDrawable(getResources().getDrawable(drawable));
-			((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
-			((ImageView) findViewById(image)).invalidate();
+//			((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
+
 			
 			for (Integer imageSet :  imageViewId)
 			{
 				pos = imageViewId.indexOf((Integer)imageSet);
 				if (((ImageView) findViewById(imageSet)).getVisibility() == View.INVISIBLE) {
+					drawableId.set(pos,0);		
 					((ImageView) findViewById(imageSet)).setImageDrawable(null);
-					((ImageView) findViewById(imageSet)).setVisibility(View.VISIBLE);
-					drawableId.set(pos,0);					
+					((ImageView) findViewById(imageSet)).setVisibility(View.VISIBLE);	
+					((ImageView) findViewById(imageSet)).invalidate();
+					break;
 				}
 			}
+			
+
 	
 			return true;
 		
@@ -158,21 +172,27 @@ public class MainActivity extends Activity {
 			if (drawableId.get(pos) == 0) return 0;
 			
 			((ImageView) findViewById(image)).setVisibility(View.INVISIBLE);
-			//((ImageView) findViewById(image)).invalidate();
 			return drawableId.get(pos);
 		}
 		
-		public void showDrawing() {
-			for (Integer image :  imageViewId)
-			{
-				int pos = imageViewId.indexOf((Integer)image);
-				if ( (((ImageView) findViewById(image)).getVisibility() == View.INVISIBLE) )  {
-					((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
-					//((ImageView) findViewById(image)).invalidate();
-				}
-			}
+		
+		public void showDrawing(int drawable) {
+			int pos = drawableId.indexOf((Integer)drawable);
+			((ImageView) findViewById(imageViewId.get(pos))).setVisibility(View.VISIBLE);
 		}
 		
+		public boolean checkImage(int image, int drawable) {
+			
+			int posDrawable = patternId.indexOf(drawable);
+			int gridDrawable = posDrawable/3;
+			
+			int posImage = imageViewId.indexOf(image);
+			int gridImage = posImage/4;
+			
+			return (gridDrawable==gridImage);
+			
+		}
+
 		public boolean checkPattern() {
 			for (int grid = 0; grid<4 ; grid++) 
 			{
@@ -187,12 +207,12 @@ public class MainActivity extends Activity {
 			}
 			return true;			
 		}
-		
+
 			
 	}
 
 	
-	public final class MyTouchListener implements OnTouchListener {
+	public final class ImageTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 				int drawableId = pictureCollection.hideDrawing(view.getId());
@@ -236,7 +256,7 @@ public class MainActivity extends Activity {
 	    		break;
 	    	case DragEvent.ACTION_DROP:
 	    		v.setBackgroundDrawable(normalShape);
-				break;
+	    		return false;
 	    	case DragEvent.ACTION_DRAG_ENDED:
 	    		v.setBackgroundDrawable(normalShape);
 	    	default:
@@ -264,18 +284,20 @@ public class MainActivity extends Activity {
 	    	case DragEvent.ACTION_DRAG_EXITED:
 	    		break;
 	    	case DragEvent.ACTION_DROP:
-    			Log.e("drag","drop");
 				// Dropped, reassign View to ViewGroup
 				Integer drawableId = (Integer) event.getLocalState();
 	    		if (pictureCollection.changeDrawing(localImageId, drawableId)) {
-	    			Log.e("drop","checking");
+	    			if (pictureCollection.checkImage(localImageId, drawableId)) {
+		        		sp.play(okSound, 1, 1, 0, 0, 1);	
+	    			}
 	    			if (pictureCollection.checkPattern())
 	    				vib.vibrate(1000);
 	    		}
 				return false;
 	    	case DragEvent.ACTION_DRAG_ENDED:
-    			Log.e("drag","ended");
-	    		pictureCollection.showDrawing();
+				Integer drawable = (Integer) event.getLocalState();
+	    		pictureCollection.showDrawing(drawable);
+	    		return true;
 	    	default:	    		
 	    		break;
 	    	}
