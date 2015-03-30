@@ -12,7 +12,6 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,14 +26,16 @@ public class MainActivity extends Activity {
 	
 	public PictureCollection pictureCollection = new PictureCollection();
 	public static Vibrator vib;
-	public static final SoundPool sp = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
+	public static final SoundPool sp = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
 	public static int okSound;
+	public static int tachanSound;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		okSound    = sp.load(this, R.raw.tata,  1); 
+		okSound     = sp.load(this, R.raw.tata,  1); 
+		tachanSound = sp.load(this, R.raw.tachan,  1); 
 		
 		setContentView(R.layout.activity_main);
 	    findViewById(R.id.imagetopleft1).setOnTouchListener(new ImageTouchListener());
@@ -310,11 +311,12 @@ public class MainActivity extends Activity {
 				// Dropped, reassign View to ViewGroup
 				Integer drawableId = (Integer) event.getLocalState();
 	    		if (pictureCollection.changeDrawing(localImageId, drawableId)) {
-	    			if (pictureCollection.checkImage(localImageId, drawableId)) {
+	    			if (pictureCollection.checkPattern()) {
+		        		sp.play(tachanSound, 1, 1, 0, 0, 1);    				
+	    			}
+	    			else if (pictureCollection.checkImage(localImageId, drawableId)) {
 		        		sp.play(okSound, 1, 1, 0, 0, 1);	
 	    			}
-	    			if (pictureCollection.checkPattern())
-	    				vib.vibrate(1000);
 	    		}
 				return false;
 	    	case DragEvent.ACTION_DRAG_ENDED:
