@@ -12,6 +12,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -140,6 +141,11 @@ public class MainActivity extends Activity {
 			int pos = imageViewId.indexOf((Integer)image);
 			if ( pos < 0 ) return false;
 			if (drawable == 0) return false;
+	/*		if (drawableId.get(pos) == drawable) {
+				Log.e("chageDrawing","change Mind");
+				((ImageView) findViewById(image)).setVisibility(View.VISIBLE);
+				return true;
+			}*/
 			if (drawableId.get(pos) > 0) return false;
 			
 			drawableId.set(pos, drawable);	
@@ -150,17 +156,21 @@ public class MainActivity extends Activity {
 			for (Integer imageSet :  imageViewId)
 			{
 				pos = imageViewId.indexOf((Integer)imageSet);
-				if (((ImageView) findViewById(imageSet)).getVisibility() == View.INVISIBLE) {
+				final ImageView droppedView =  (ImageView) findViewById(imageSet);
+				
+				if (droppedView.getVisibility() == View.INVISIBLE) {
 					drawableId.set(pos,0);		
-					((ImageView) findViewById(imageSet)).setImageDrawable(null);
-					((ImageView) findViewById(imageSet)).setVisibility(View.VISIBLE);	
-					((ImageView) findViewById(imageSet)).invalidate();
+					droppedView.setImageDrawable(null);
+					droppedView.post(new Runnable() {
+						public void run() {
+							droppedView.setVisibility(View.VISIBLE);
+						}
+					});	
+					droppedView.invalidate();
 					break;
 				}
 			}
 			
-
-	
 			return true;
 		
 		}
@@ -170,15 +180,28 @@ public class MainActivity extends Activity {
 			int pos = imageViewId.indexOf((Integer)image);
 			if ( pos < 0 ) return 0;
 			if (drawableId.get(pos) == 0) return 0;
+
+			final ImageView droppedView =  (ImageView) findViewById(image);
+			droppedView.post(new Runnable() {
+				public void run() {
+					droppedView.setVisibility(View.INVISIBLE);
+				}
+			});	
 			
-			((ImageView) findViewById(image)).setVisibility(View.INVISIBLE);
+//			((ImageView) findViewById(image)).setVisibility(View.INVISIBLE);
 			return drawableId.get(pos);
 		}
 		
 		
 		public void showDrawing(int drawable) {
 			int pos = drawableId.indexOf((Integer)drawable);
-			((ImageView) findViewById(imageViewId.get(pos))).setVisibility(View.VISIBLE);
+			final ImageView droppedView =  (ImageView) findViewById(imageViewId.get(pos));
+
+			droppedView.post(new Runnable() {
+				public void run() {
+					droppedView.setVisibility(View.VISIBLE);
+				}
+			});	
 		}
 		
 		public boolean checkImage(int image, int drawable) {
